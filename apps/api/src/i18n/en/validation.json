@@ -1,0 +1,5 @@
+{
+  "invalid_email": "Invalid email",
+  "password_required": "Password is required",
+  "refresh_token_required": "Refresh token is required"
+}

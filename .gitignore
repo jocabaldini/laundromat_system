@@ -1,0 +1,90 @@
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# =========================
+# Logs
+# =========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# =========================
+# Dependencies
+# =========================
+node_modules/
+**/node_modules/
+
+# =========================
+# Build outputs (Node / Nest)
+# =========================
+dist/
+**/dist/
+build/
+**/build/
+
+# =========================
+# Next.js
+# =========================
+.next/
+**/.next/
+out/
+**/out/
+next-env.d.ts
+
+# =========================
+# Caches
+# =========================
+.cache/
+**/.cache/
+.turbo/
+**/.turbo/
+.swc/
+**/.swc/
+.eslintcache
+**/.eslintcache
+
+# =========================
+# Tests / Coverage
+# =========================
+coverage/
+**/coverage/
+.nyc_output/
+**/.nyc_output/
+
+# =========================
+# Env / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Prisma / DB artifacts (se usar SQLite em algum momento)
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+prisma/dev.db
+**/prisma/dev.db
+
+# =========================
+# Docker (opcional: manter compose e Dockerfiles versionados)
+# =========================
+# Descomente se você NÃO quer versionar nada de docker:
+# Dockerfile
+# docker-compose*.yml
+
+# =========================
+# Misc
+# =========================
+*.tsbuildinfo
+*:Zone.Identifier

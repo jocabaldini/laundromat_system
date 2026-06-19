@@ -1,0 +1,56 @@
+import { ptBR } from './locales/pt-BR';
+import { enUS } from './locales/en-US';
+import type { NextRequest } from 'next/server';
+
+export type Locale = 'pt-BR' | 'en-US';
+
+export type Dictionary = {
+  readonly login: {
+    readonly title: string;
+    readonly subtitle: string;
+    readonly email: string;
+    readonly emailPlaceholder: string;
+    readonly password: string;
+    readonly passwordPlaceholder: string;
+    readonly submit: string;
+    readonly submitting: string;
+    readonly errorFallback: string;
+  };
+  readonly dashboard: {
+    readonly title: string;
+  };
+  readonly navbar: {
+    readonly appName: string;
+    readonly logout: string;
+    readonly loggingOut: string;
+  };
+};
+
+const dictionaries: Record<Locale, Dictionary> = {
+  'pt-BR': ptBR,
+  'en-US': enUS,
+};
+
+export const DEFAULT_LOCALE: Locale = 'pt-BR';
+export const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en-US'];
+export const LOCALE_COOKIE = 'NEXT_LOCALE';
+
+export function getDictionary(locale: Locale = DEFAULT_LOCALE): Dictionary {
+  return dictionaries[locale] ?? dictionaries[DEFAULT_LOCALE];
+}
+
+/** Resolves locale from request: cookie → Accept-Language header → default */
+export function getLocaleFromRequest(req: NextRequest): Locale {
+  const cookie = req.cookies.get(LOCALE_COOKIE)?.value as Locale | undefined;
+  if (cookie && SUPPORTED_LOCALES.includes(cookie)) return cookie;
+
+  const acceptLanguage = req.headers.get('accept-language') ?? '';
+  const browserLocale = acceptLanguage
+    .split(',')
+    .map((part) => part.split(';')[0].trim())
+    .find((lang) => SUPPORTED_LOCALES.includes(lang as Locale)) as Locale | undefined;
+
+  if (browserLocale) return browserLocale;
+
+  return DEFAULT_LOCALE;
+}

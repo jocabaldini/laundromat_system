@@ -1,0 +1,62 @@
+{
+  "name": "nest_next_template",
+  "author": "João Carlos de Souza Baldini",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Full-stack template built with NestJS, Next.js, Prisma, and PostgreSQL.",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20 <21"
+  },
+  "packageManager": "npm@10.8.2",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm -w apps/api run start:dev\" \"npm -w apps/web run dev\"",
+    "dev:api": "npm -w apps/api run start:dev",
+    "dev:web": "npm -w apps/web run dev",
+    "build": "npm run build --workspaces --if-present",
+    "build:api": "npm -w apps/api run build --if-present",
+    "build:web": "npm -w apps/web run build --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:api": "npm -w apps/api run lint --if-present",
+    "lint:web": "npm -w apps/web run lint --if-present",
+    "format": "prettier --write \"apps/**/*.{ts,tsx,json}\"",
+    "format:check": "prettier --check \"apps/**/*.{ts,tsx,json}\"",
+    "test": "npm run test --workspaces --if-present",
+    "test:api": "npm -w apps/api run test --if-present",
+    "test:web": "npm -w apps/web run test --if-present",
+    "db:studio": "npm -w apps/api exec prisma studio",
+    "db:reset": "npm -w apps/api exec prisma migrate reset",
+    "db:generate": "npm -w apps/api run prisma:generate",
+    "db:deploy": "npm -w apps/api run prisma:migrate:deploy",
+    "db:migrate": "npm -w apps/api run prisma:migrate:dev",
+    "db:seed": "npm -w apps/api run prisma:seed",
+    "audit:env": "tsx scripts/audit-env.ts",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "concurrently": "^9.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.4.2",
+    "tsx": "^4.21.0"
+  },
+  "lint-staged": {
+    "apps/api/**/*.ts": [
+      "eslint --fix --no-warn-ignored -c apps/api/eslint.config.mjs",
+      "prettier --write"
+    ],
+    "apps/web/**/*.{ts,tsx}": [
+      "eslint --fix --max-warnings=0 --no-warn-ignored -c apps/web/eslint.config.mjs",
+      "prettier --write"
+    ],
+    "apps/**/*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

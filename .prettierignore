@@ -1,0 +1,10 @@
+# Dependencies
+node_modules
+
+# Build outputs
+apps/api/dist
+apps/web/.next
+apps/web/out
+
+# Generated files
+apps/api/prisma/migrations
