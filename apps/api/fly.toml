@@ -1,4 +1,4 @@
-app = "seu-projeto-api"
+app = "laundromat-system-api"
 primary_region = "gru"
 
 [build]
