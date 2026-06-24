@@ -3,51 +3,52 @@
 FROM node:20-alpine AS base
 WORKDIR /repo
 
-# Necessário para algumas libs nativas (ex: bcrypt) compilarem
+# Required for native addons (e.g. bcrypt) to compile
 RUN apk add --no-cache libc6-compat
 
 # -------------------------
-# deps (instala dependências)
+# deps — install dependencies
 # -------------------------
 FROM base AS deps
 
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/package.json
 
-# Se a API importar packages internos, copie os manifests também:
+# If the API imports internal packages, copy their manifests too:
 # COPY packages/shared/package.json packages/shared/package.json
 
 RUN npm ci
 
 # -------------------------
-# build (compila Nest + gera prisma)
+# build — compile NestJS + generate Prisma client
 # -------------------------
 FROM base AS build
 
 COPY --from=deps /repo/node_modules ./node_modules
 COPY . .
 
-# Prisma generate (no workspace da API)
+# Generate Prisma client for the API workspace
 RUN npm -w apps/api exec prisma generate
 
-# Build da API
+# Build the API
 RUN npm -w apps/api run build
 
-# Remove devDependencies do root (mantém apenas produção)
+# Strip devDependencies — keep production deps only
 RUN npm prune --omit=dev
 
 # -------------------------
-# runner (imagem final)
+# runner — final production image
 # -------------------------
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
 RUN apk add --no-cache libc6-compat
-# Usuário não-root
+
+# Run as non-root user
 USER node
 
-# Copia apenas o necessário
+# Copy only what is needed to run the app
 COPY --from=build /repo/apps/api/dist ./dist
 COPY --from=build /repo/apps/api/package.json ./package.json
 COPY --from=build /repo/apps/api/prisma ./prisma

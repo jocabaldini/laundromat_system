@@ -1,6 +1,6 @@
 {
-  "name": "laundromat-system",
-  "author": "João Carlos de Souza Baldini",
+  "name": "nest_next_template",
+  "author": "Jo\u00e3o Carlos de Souza Baldini",
   "private": true,
   "version": "0.1.0",
   "description": "Full-stack template built with NestJS, Next.js, Prisma, and PostgreSQL.",
@@ -35,7 +35,7 @@
     "db:migrate": "npm -w apps/api run prisma:migrate:dev",
     "db:seed": "npm -w apps/api run prisma:seed",
     "audit:env": "tsx scripts/audit-env.ts",
-    "prepare": "husky"
+    "prepare": "node --eval \"process.env.CI || process.env.VERCEL ? null : require(\"child_process\").execSync(\"husky\", {stdio:\"inherit\"})\""
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
