@@ -109,6 +109,8 @@ jobs:
 
       - name: Setup flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
+        with:
+          version: '0.3.83'
 
       - name: Deploy to Fly.io
         run: flyctl deploy --remote-only
