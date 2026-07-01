@@ -1,8 +1,8 @@
 -- Rename enum value ADMIN to OPERATOR
 -- Using CREATE/ALTER approach compatible with transaction mode
 
+ALTER TABLE "User" ALTER COLUMN "role" DROP DEFAULT;
 ALTER TABLE "User" ALTER COLUMN "role" TYPE text;
-ALTER TABLE "User" ALTER COLUMN "role" SET DEFAULT 'USER';
 
 DROP TYPE "Role";
 
