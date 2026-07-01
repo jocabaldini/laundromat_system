@@ -25,7 +25,7 @@ describe('Auth — Me (e2e)', () => {
     expect(res.body).toMatchObject({
       email: 'admin@test.com',
       name: 'Admin Test',
-      role: 'ADMIN',
+      role: 'OPERATOR',
     });
     expect(res.body).not.toHaveProperty('passwordHash');
     expect(res.body).not.toHaveProperty('refreshTokenHash');

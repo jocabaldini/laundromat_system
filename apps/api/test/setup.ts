@@ -33,13 +33,13 @@ export default async function globalSetup() {
 
     const SALT_ROUNDS = 10;
 
-    // Create test ADMIN
+    // Create test OPERATOR
     await prisma.user.create({
       data: {
         email: 'admin@test.com',
         name: 'Admin Test',
         passwordHash: await bcrypt.hash('Admin@123', SALT_ROUNDS),
-        role: 'ADMIN',
+        role: 'OPERATOR',
       },
     });
 

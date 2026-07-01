@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   async me(userId: string, lang: string) {
-    return this.users.findOne(userId, lang, userId, Role.ADMIN);
+    return this.users.findOne(userId, lang, userId, Role.OPERATOR);
   }
 
   private async generateTokens(userId: string, email: string, role: Role) {

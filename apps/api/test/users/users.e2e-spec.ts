@@ -39,7 +39,7 @@ describe('Users (e2e)', () => {
   // ─── POST /users ───────────────────────────────────────────────────────────
 
   describe('POST /users', () => {
-    it('ADMIN — creates a new user', async () => {
+    it('OPERATOR — creates a new user', async () => {
       const res = await request(app.getHttpServer())
         .post('/users')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -58,7 +58,7 @@ describe('Users (e2e)', () => {
       expect(res.body).not.toHaveProperty('passwordHash');
     });
 
-    it('ADMIN — creates a user with explicit ADMIN role', async () => {
+    it('OPERATOR — creates a user with explicit OPERATOR role', async () => {
       const res = await request(app.getHttpServer())
         .post('/users')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -66,11 +66,11 @@ describe('Users (e2e)', () => {
           email: 'newadmin@test.com',
           name: 'New Admin',
           password: 'NewAdmin@123',
-          role: 'ADMIN',
+          role: 'OPERATOR',
         })
         .expect(201);
 
-      expect(res.body).toMatchObject({ role: 'ADMIN' });
+      expect(res.body).toMatchObject({ role: 'OPERATOR' });
     });
 
     it('USER — cannot create a user (403)', async () => {
@@ -92,7 +92,7 @@ describe('Users (e2e)', () => {
         .expect(401);
     });
 
-    it('ADMIN — fails with duplicate email (409)', async () => {
+    it('OPERATOR — fails with duplicate email (409)', async () => {
       await request(app.getHttpServer())
         .post('/users')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -108,7 +108,7 @@ describe('Users (e2e)', () => {
   // ─── GET /users ────────────────────────────────────────────────────────────
 
   describe('GET /users', () => {
-    it('ADMIN — returns list of users', async () => {
+    it('OPERATOR — returns list of users', async () => {
       const res = await request(app.getHttpServer())
         .get('/users')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -133,7 +133,7 @@ describe('Users (e2e)', () => {
   // ─── GET /users/:id ────────────────────────────────────────────────────────
 
   describe('GET /users/:id', () => {
-    it('ADMIN — can read any user', async () => {
+    it('OPERATOR — can read any user', async () => {
       const res = await request(app.getHttpServer())
         .get(`/users/${userId}`)
         .set('Authorization', `Bearer ${adminToken}`)
@@ -158,7 +158,7 @@ describe('Users (e2e)', () => {
         .expect(403);
     });
 
-    it('ADMIN — returns 404 for non-existent user', async () => {
+    it('OPERATOR — returns 404 for non-existent user', async () => {
       await request(app.getHttpServer())
         .get('/users/nonexistentid123')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -173,7 +173,7 @@ describe('Users (e2e)', () => {
   // ─── PATCH /users/:id ──────────────────────────────────────────────────────
 
   describe('PATCH /users/:id', () => {
-    it('ADMIN — can update any user', async () => {
+    it('OPERATOR — can update any user', async () => {
       const res = await request(app.getHttpServer())
         .patch(`/users/${userId}`)
         .set('Authorization', `Bearer ${adminToken}`)
@@ -220,7 +220,7 @@ describe('Users (e2e)', () => {
       await request(app.getHttpServer()).delete(`/users/${userId}`).expect(401);
     });
 
-    it('ADMIN — can delete a user', async () => {
+    it('OPERATOR — can delete a user', async () => {
       // Create a throwaway user to delete
       const created = await request(app.getHttpServer())
         .post('/users')
@@ -238,7 +238,7 @@ describe('Users (e2e)', () => {
         .expect(200);
     });
 
-    it('ADMIN — returns 404 when deleting non-existent user', async () => {
+    it('OPERATOR — returns 404 when deleting non-existent user', async () => {
       await request(app.getHttpServer())
         .delete('/users/nonexistentid123')
         .set('Authorization', `Bearer ${adminToken}`)

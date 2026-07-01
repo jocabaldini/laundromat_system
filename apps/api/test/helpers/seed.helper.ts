@@ -34,7 +34,7 @@ export async function resetTestUsers(prisma: PrismaClient): Promise<void> {
         email: 'admin@test.com',
         name: 'Admin Test',
         passwordHash: await bcrypt.hash('Admin@123', SALT_ROUNDS),
-        role: 'ADMIN',
+        role: 'OPERATOR',
       },
       {
         email: 'user@test.com',

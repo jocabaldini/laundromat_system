@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    container_name: myapp-postgres
+    container_name: laundromat-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -22,7 +22,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: myapp-redis
+    container_name: laundromat-redis
     ports:
       - "6379:6379"
     volumes:
