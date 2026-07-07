@@ -1,24 +1,26 @@
-import { PrismaClient } from '@prisma/client';
-import { Role } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  const name = process.env.ADMIN_NAME ?? 'Admin';
+
+  if (!email || !password) {
+    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required');
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
 
   await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
-      email: 'admin@example.com',
-      name: 'Admin',
-      passwordHash,
-      role: Role.OPERATOR,
-    },
+    where: { email },
+    update: { passwordHash, name },
+    create: { email, name, passwordHash, role: Role.OPERATOR },
   });
 
-  console.log('✅ Seed concluído — admin@example.com criado');
+  console.log(`✅ Seed complete — ${email} upserted`);
 }
 
 main()
