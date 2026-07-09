@@ -1,11 +1,16 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomUUID, timingSafeEqual } from 'crypto';
 import type { StringValue } from 'ms';
 import { I18nService } from 'nestjs-i18n';
-import { UsersService } from '../users/users.service';
+import { UsersRepository } from '../users/users.repository';
 import { Role } from '@prisma/client';
 
 // SHA-256 hash of a refresh token — avoids bcrypt's 72-byte truncation limit.
@@ -26,14 +31,14 @@ function tokenMatchesHash(token: string, hash: string): boolean {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly users: UsersService,
+    private readonly repo: UsersRepository,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
     private readonly i18n: I18nService,
   ) {}
 
   async login(email: string, password: string, lang: string) {
-    const user = await this.users.findByEmailWithHash(email);
+    const user = await this.repo.findByEmailWithCredentials(email);
     const invalidCredentials = this.i18n.t('auth.invalid_credentials', { lang });
 
     if (!user) throw new UnauthorizedException(invalidCredentials);
@@ -59,7 +64,7 @@ export class AuthService {
       throw new ForbiddenException(this.i18n.t('auth.refresh_token_invalid_expired', { lang }));
     }
 
-    const user = await this.users.findById(payload.sub);
+    const user = await this.repo.findById(payload.sub);
     const accessDenied = this.i18n.t('auth.access_denied', { lang });
 
     if (!user) throw new ForbiddenException(accessDenied);
@@ -73,12 +78,12 @@ export class AuthService {
 
     // Token does not match the stored hash — it was already rotated; possible reuse attack
     if (!tokenMatch) {
-      await this.users.clearRefreshToken(user.id);
+      await this.repo.clearRefreshToken(user.id);
       throw new ForbiddenException(this.i18n.t('auth.refresh_token_invalid', { lang }));
     }
 
     // Valid token: clear the current one before issuing new pair
-    await this.users.clearRefreshToken(user.id);
+    await this.repo.clearRefreshToken(user.id);
 
     const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.saveRefreshToken(user.id, tokens.refreshToken);
@@ -87,11 +92,15 @@ export class AuthService {
   }
 
   async logout(userId: string) {
-    await this.users.clearRefreshToken(userId);
+    await this.repo.clearRefreshToken(userId);
   }
 
   async me(userId: string, lang: string) {
-    return this.users.findOne(userId, lang, userId, Role.OPERATOR);
+    const user = await this.repo.findPublicById(userId);
+    if (!user) {
+      throw new NotFoundException(this.i18n.t('users.not_found', { lang }));
+    }
+    return user;
   }
 
   private async generateTokens(userId: string, email: string, role: Role) {
@@ -130,6 +139,6 @@ export class AuthService {
 
   private async saveRefreshToken(userId: string, refreshToken: string) {
     const hash = hashToken(refreshToken);
-    await this.users.updateRefreshToken(userId, hash);
+    await this.repo.updateRefreshToken(userId, hash);
   }
 }

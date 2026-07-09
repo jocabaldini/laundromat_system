@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Security audit
+        run: npm audit --audit-level=high
+
       - name: Lint API
         # Warnings are expected in NestJS/Prisma codebases (implicit `any` from decorators).
         # We run lint to catch errors only — warnings do not fail CI.
