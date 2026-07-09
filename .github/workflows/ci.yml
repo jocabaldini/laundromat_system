@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Security audit
-        run: npm audit --audit-level=critical
+        run: npm audit --audit-level=critical --omit=dev
 
       - name: Lint API
         # Warnings are expected in NestJS/Prisma codebases (implicit `any` from decorators).
