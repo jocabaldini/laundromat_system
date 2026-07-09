@@ -15,4 +15,28 @@ export const NEST_ROUTES = {
     update: (id: string) => `/users/${id}`,
     remove: (id: string) => `/users/${id}`,
   },
+
+  customers: {
+    list: '/customers',
+    create: '/customers',
+    findOne: (id: string) => `/customers/${id}`,
+    update: (id: string) => `/customers/${id}`,
+    remove: (id: string) => `/customers/${id}`,
+    findByCode: (code: string) => `/customers/code/${code}`,
+  },
+
+  serviceOrders: {
+    list: '/service-orders',
+    create: '/service-orders',
+    findOne: (id: string) => `/service-orders/${id}`,
+    updateStatus: (id: string) => `/service-orders/${id}/status`,
+    remove: (id: string) => `/service-orders/${id}`,
+  },
+
+  invoices: {
+    list: '/invoices',
+    findOne: (id: string) => `/invoices/${id}`,
+    generate: (serviceOrderId: string) => `/service-orders/${serviceOrderId}/invoice`,
+    download: (id: string) => `/invoices/${id}/pdf`,
+  },
 } as const;

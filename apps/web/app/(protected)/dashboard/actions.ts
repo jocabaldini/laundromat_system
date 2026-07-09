@@ -1,26 +1,11 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { serverApi } from '@/lib/api/server-client';
+import { NEST_ROUTES } from '@/lib/api/routes';
+import type { User } from '@/lib/types';
 
-export async function getMe() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('auth_token')?.value;
-
-  if (!token) return null;
-
-  try {
-    const res = await fetch(`${process.env.API_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: 'no-store',
-    });
-
-    if (!res.ok) return null;
-
-    return res.json();
-  } catch {
-    // API is unreachable (e.g. not yet started or network error)
-    return null;
-  }
+export async function getMe(): Promise<User | null> {
+  const result = await serverApi.get<User>(NEST_ROUTES.auth.me);
+  if (!result.success) return null;
+  return result.data;
 }
