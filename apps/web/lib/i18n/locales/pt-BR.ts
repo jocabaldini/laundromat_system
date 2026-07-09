@@ -11,10 +11,10 @@ export const ptBR = {
     errorFallback: 'Erro ao fazer login',
   },
   dashboard: {
-    title: 'Template NestJS e Next.js',
+    title: 'Lavanderia Visconde',
   },
   navbar: {
-    appName: 'Meu App',
+    appName: 'Lavanderia Visconde',
     logout: 'Sair',
     loggingOut: 'Saindo...',
   },

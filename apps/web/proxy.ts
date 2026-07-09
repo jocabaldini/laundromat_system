@@ -5,6 +5,7 @@ import { NEST_ROUTES } from './lib/api/routes';
 import { env } from './lib/env';
 
 const PUBLIC_PATHS = ['/login'];
+const STATIC_FILE_REGEX = /\.(?:svg|png|ico|jpg|jpeg|webp|gif|woff|woff2|ttf|otf|eot)$/;
 
 const ACCESS_COOKIE = 'auth_token';
 const REFRESH_COOKIE = 'refresh_token';
@@ -13,6 +14,10 @@ const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 
 function isPublicPath(pathname: string) {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
+function isStaticFile(pathname: string) {
+  return STATIC_FILE_REGEX.test(pathname);
 }
 
 async function tryRefresh(
@@ -71,6 +76,11 @@ function clearTokensFromResponse(response: NextResponse) {
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  if (isStaticFile(pathname)) {
+    return NextResponse.next();
+  }
+
   const isProd = process.env.NODE_ENV === 'production';
   const isPublic = isPublicPath(pathname);
 

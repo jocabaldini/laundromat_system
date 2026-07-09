@@ -11,10 +11,10 @@ export const enUS = {
     errorFallback: 'Failed to sign in',
   },
   dashboard: {
-    title: 'NestJS and Next.js Template',
+    title: 'Visconde Laundromat',
   },
   navbar: {
-    appName: 'My App',
+    appName: 'Visconde Laundromat',
     logout: 'Sign out',
     loggingOut: 'Signing out...',
   },

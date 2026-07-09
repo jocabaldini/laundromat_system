@@ -1,19 +1,157 @@
 @import "tailwindcss";
 
+/* ─── Light mode (default) ─────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Page */
+  --bg-page: #F0F4FF;
+
+  /* Cards / surfaces */
+  --bg-card: #FFFFFF;
+  --border-card: #D4DCEF;
+
+  /* Inputs */
+  --bg-input: #FFFFFF;
+  --border-input: #C4CEEA;
+  --border-input-focus: #2D45A8;
+  --ring-input: rgba(45, 69, 168, 0.15);
+
+  /* Text hierarchy */
+  --text-heading: #1E2E6E;
+  --text-body: #2A3A60;
+  --text-secondary: #4A5880;
+  --text-muted: #6B7FA3;
+  --text-placeholder: #94A3B8;
+  --text-on-primary: #FFFFFF;
+
+  /* Primary brand */
+  --primary: #1E2E6E;
+  --primary-hover: #2D45A8;
+  --primary-subtle: #E8EDF8;
+
+  /* Buttons */
+  --btn-primary-bg: #1E2E6E;
+  --btn-primary-hover: #2D45A8;
+  --btn-secondary-border: #C4CEEA;
+  --btn-secondary-text: #1E2E6E;
+  --btn-secondary-hover: #E8EDF8;
+  --btn-ghost-bg: #E8EDF8;
+  --btn-ghost-text: #1E2E6E;
+
+  /* Borders */
+  --border: #D4DCEF;
+  --border-subtle: #E8EDF8;
+  --border-strong: #B0BDDB;
+
+  /* Navbar */
+  --navbar-bg: #1E2E6E;
+
+  /* Status */
+  --color-success: #16A34A;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+  --color-success-text: #15803D;
+
+  --color-info: #0284C7;
+  --color-info-bg: #F0F9FF;
+  --color-info-border: #BAE6FD;
+  --color-info-text: #0369A1;
+
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-border: #FDE68A;
+  --color-warning-text: #B45309;
+
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEF2F2;
+  --color-danger-border: #FECACA;
+  --color-danger-text: #B91C1C;
+
+  /* Autofill override */
+  --autofill-bg: #FFFFFF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Dark mode ─────────────────────────────────────────────────────────── */
+.dark {
+  /* Page */
+  --bg-page: #0F1218;
+
+  /* Cards */
+  --bg-card: #161D2E;
+  --border-card: #243050;
+
+  /* Inputs */
+  --bg-input: #0D1320;
+  --border-input: #243050;
+  --border-input-focus: #4A6BC4;
+  --ring-input: rgba(74, 107, 196, 0.20);
+
+  /* Text hierarchy */
+  --text-heading: #E8EEFF;
+  --text-body: #C4CFEE;
+  --text-secondary: #8A9CC8;
+  --text-muted: #5A6A8A;
+  --text-placeholder: #4A5568;
+  --text-on-primary: #FFFFFF;
+
+  /* Primary brand */
+  --primary: #4A6BC4;
+  --primary-hover: #5A7BD4;
+  --primary-subtle: #1E2E6E;
+
+  /* Buttons */
+  --btn-primary-bg: #2D45A8;
+  --btn-primary-hover: #4A6BC4;
+  --btn-secondary-border: #243050;
+  --btn-secondary-text: #C4CFEE;
+  --btn-secondary-hover: #1E2E6E;
+  --btn-ghost-bg: #1E2E6E;
+  --btn-ghost-text: #C4CFEE;
+
+  /* Borders */
+  --border: #243050;
+  --border-subtle: #1E2E6E;
+  --border-strong: #2D45A8;
+
+  /* Navbar */
+  --navbar-bg: #111827;
+
+  /* Status */
+  --color-success: #22C55E;
+  --color-success-bg: #052E16;
+  --color-success-border: #166534;
+  --color-success-text: #4ADE80;
+
+  --color-info: #38BDF8;
+  --color-info-bg: #082F49;
+  --color-info-border: #0369A1;
+  --color-info-text: #7DD3FC;
+
+  --color-warning: #FCD34D;
+  --color-warning-bg: #1C1500;
+  --color-warning-border: #92400E;
+  --color-warning-text: #FDE68A;
+
+  --color-danger: #F87171;
+  --color-danger-bg: #2D0000;
+  --color-danger-border: #991B1B;
+  --color-danger-text: #FCA5A5;
+
+  /* Autofill override */
+  --autofill-bg: #0D1320;
 }
 
+/* ─── Base styles ───────────────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-body);
+}
+
+/* ─── Chrome autofill fix ───────────────────────────────────────────────── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 9999px var(--autofill-bg) inset !important;
+  -webkit-text-fill-color: var(--text-heading) !important;
+  caret-color: var(--text-heading);
 }

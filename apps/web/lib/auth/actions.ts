@@ -5,7 +5,9 @@ import { getApiUrl } from '@/lib/api/config';
 import { setSession, clearSession, getSession } from './session';
 import { NEST_ROUTES } from '@/lib/api/routes';
 
-export async function loginAction(email: string, password: string) {
+export type LoginResult = { success: true } | { success: false; message: string };
+
+export async function loginAction(email: string, password: string): Promise<LoginResult> {
   try {
     const res = await fetch(`${getApiUrl()}${NEST_ROUTES.auth.login}`, {
       method: 'POST',
@@ -17,19 +19,14 @@ export async function loginAction(email: string, password: string) {
     if (!res.ok) {
       const body = await res.json().catch(() => null);
       const message = body?.message ?? 'Credenciais inválidas';
-      throw new Error(message);
+      return { success: false, message };
     }
 
     const { accessToken, refreshToken } = await res.json();
     await setSession(accessToken, refreshToken);
-  } catch (err) {
-    // Re-throw known errors (invalid credentials, etc.)
-    if (err instanceof Error && err.message !== 'fetch failed') {
-      throw err;
-    }
-
-    // API is unreachable
-    throw new Error('Serviço indisponível. Tente novamente em instantes.');
+    return { success: true };
+  } catch {
+    return { success: false, message: 'Serviço indisponível. Tente novamente em instantes.' };
   }
 }
 

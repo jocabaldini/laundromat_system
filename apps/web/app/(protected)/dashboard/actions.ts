@@ -1,7 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 export async function getMe() {
   const cookieStore = await cookies();
@@ -24,10 +23,4 @@ export async function getMe() {
     // API is unreachable (e.g. not yet started or network error)
     return null;
   }
-}
-
-export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete('auth_token');
-  redirect('/login');
 }
