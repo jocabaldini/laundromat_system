@@ -1,0 +1,5 @@
+{
+  "not_found": "Customer not found",
+  "code_in_use": "Code is already in use",
+  "code_invalid": "Code must be exactly 3 alphanumeric characters"
+}

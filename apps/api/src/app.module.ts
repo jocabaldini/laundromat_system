@@ -7,6 +7,7 @@ import { HealthController } from './health.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CustomersModule } from './customers/customers.module';
 import { throttlerConfig } from './throttler.config';
 import { envValidationSchema } from './config/env.validation';
 import { LoggerModule } from './common/logger/logger.module';
@@ -47,6 +48,7 @@ import { RequestContextMiddleware } from './common/request-context/request-conte
     PrismaModule,
     AuthModule,
     UsersModule,
+    CustomersModule,
   ],
   controllers: [HealthController],
 })
