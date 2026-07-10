@@ -1,0 +1,15 @@
+meta {
+  name: List Customers (search)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/customers?search=JOS
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

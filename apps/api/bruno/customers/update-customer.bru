@@ -1,0 +1,22 @@
+meta {
+  name: Update Customer
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/customers/{{customerId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "phone": "(35) 88888-0002",
+    "address": "Rua Nova, 456"
+  }
+}

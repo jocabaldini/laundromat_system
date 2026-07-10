@@ -1,0 +1,32 @@
+meta {
+  name: Create Customer
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/customers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "code": "MAS",
+    "name": "Maria Aparecida Santos",
+    "phone": "(35) 99999-0001",
+    "email": "maria@email.com",
+    "address": "Rua das Flores, 123"
+  }
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setEnvVar("customerId", res.body.id);
+    bru.setEnvVar("customerCode", res.body.code);
+  }
+}

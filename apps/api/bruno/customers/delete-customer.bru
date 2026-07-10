@@ -1,0 +1,15 @@
+meta {
+  name: Delete Customer (soft)
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/customers/{{customerId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

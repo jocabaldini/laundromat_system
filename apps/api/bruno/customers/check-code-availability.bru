@@ -1,0 +1,15 @@
+meta {
+  name: Check Code Availability
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/customers/code/{{customerCode}}/availability
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Suggest Code
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/customers/suggest-code?name=Maria Aparecida Santos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
