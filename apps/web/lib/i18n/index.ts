@@ -24,6 +24,45 @@ export type Dictionary = {
     readonly logout: string;
     readonly loggingOut: string;
   };
+  readonly sidebar: {
+    readonly menu: string;
+    readonly system: string;
+    readonly dashboard: string;
+    readonly customers: string;
+    readonly serviceOrders: string;
+    readonly invoices: string;
+    readonly users: string;
+  };
+  readonly customers: {
+    readonly title: string;
+    readonly newCustomer: string;
+    readonly editCustomer: string;
+    readonly count: (n: number) => string;
+    readonly searchPlaceholder: string;
+    readonly search: string;
+    readonly code: string;
+    readonly name: string;
+    readonly phone: string;
+    readonly email: string;
+    readonly address: string;
+    readonly actions: string;
+    readonly edit: string;
+    readonly delete: string;
+    readonly save: string;
+    readonly cancel: string;
+    readonly codeHint: string;
+    readonly codeRequired: string;
+    readonly suggestCode: string;
+    readonly codeAvailable: string;
+    readonly codeUnavailable: string;
+    readonly deleteConfirm: string;
+    readonly deleteConfirmDescription: string;
+    readonly confirmDelete: string;
+    readonly breadcrumbList: string;
+    readonly breadcrumbNew: string;
+    readonly breadcrumbEdit: string;
+    readonly noResults: string;
+  };
 };
 
 const dictionaries: Record<Locale, Dictionary> = {

@@ -14,9 +14,10 @@ export interface Customer {
   id: string;
   code: string; // 3-digit unique identifier written on garments
   name: string;
-  phone: string;
-  email?: string;
-  address?: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }

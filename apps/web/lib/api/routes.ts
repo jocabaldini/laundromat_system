@@ -23,6 +23,8 @@ export const NEST_ROUTES = {
     update: (id: string) => `/customers/${id}`,
     remove: (id: string) => `/customers/${id}`,
     findByCode: (code: string) => `/customers/code/${code}`,
+    checkAvailability: (code: string) => `/customers/code/${code}/availability`,
+    suggestCode: (name: string) => `/customers/suggest-code?name=${encodeURIComponent(name)}`,
   },
 
   serviceOrders: {
