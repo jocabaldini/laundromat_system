@@ -38,3 +38,20 @@ model Customer {
   @@index([name])
   @@index([deletedAt])
 }
+
+enum PricingType {
+  POR_KG
+  POR_UNIDADE
+}
+
+model ServiceItem {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  type      PricingType
+  price     Decimal     @db.Decimal(10, 2)
+  deletedAt DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([deletedAt])
+}
