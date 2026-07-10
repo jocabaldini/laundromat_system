@@ -25,6 +25,7 @@ Built on top of `nest_next_template` boilerplate.
 - **Every user-facing text must go through the i18n system.** No hardcoded strings in components.
 - Add all new strings to both `apps/web/lib/i18n/locales/pt-BR.ts` and `apps/web/lib/i18n/locales/en-US.ts`.
 - Pass the `dict` prop down to client components that need translated strings.
+- **Never pass functions in dict to client components** — compute them server-side into plain strings before passing as props (React Server Components cannot serialize functions across the server/client boundary).
 - Never write Portuguese or English text directly in JSX — always reference `dict.key`.
 
 ## Tech stack
@@ -57,164 +58,78 @@ Built on top of `nest_next_template` boilerplate.
 - **CI deploy**: `flyctl deploy --local-only`
 - **Supabase**: `DATABASE_URL` port 6543 with `?pgbouncer=true`; `DIRECT_URL` port 5432
 - **DB migrations**: use DROP DEFAULT → TYPE text → DROP TYPE → CREATE TYPE → USING cast → SET DEFAULT (NOT `ALTER TYPE RENAME VALUE` — fails with Supabase pgbouncer)
+- **Soft-delete**: all models use `deletedAt DateTime?` — never hard-delete. Queries filter `deletedAt: null` by default, accepting an `includeDeleted` flag to include them.
+- **Repository Pattern**: every module has a `*.repository.ts` that owns all Prisma access. Services contain business logic only and depend on the repository interface.
+- **All configurable values in environment variables**: URLs, parameters, and settings must never be hardcoded.
 
 ## Project structure
 
 ```
 apps/api/src/
-  auth/                   — JWT auth, guards, decorators
-  common/filters/         — HttpExceptionFilter
-  common/logger/          — LoggerService, transport pattern
-  common/request-context/ — AsyncLocalStorage request ID
-  config/                 — Joi env validation
-  i18n/                   — translation files (en/, pt/)
-  prisma/                 — PrismaService
-  users/                  — Users CRUD with RBAC
+  auth/                       — JWT auth, guards, decorators
+  common/
+    filters/                  — HttpExceptionFilter (global)
+    logger/                   — LoggerService, transport pattern
+    repositories/             — base.repository.interface.ts
+    request-context/          — AsyncLocalStorage request ID
+  config/                     — Joi env validation
+  customers/                  — Customer module (CRUD + soft-delete)
+    dto/
+    customers.controller.ts
+    customers.repository.ts
+    customers.service.ts
+    customers.service.spec.ts
+  i18n/                       — translation files (en/, pt/)
+  prisma/                     — PrismaService
+  users/                      — Users module (CRUD + RBAC)
+    dto/
+    users.controller.ts
+    users.repository.ts
+    users.service.ts
+    users.service.spec.ts
 
 apps/web/
   app/(auth)/login/
     page.tsx
-    view/LoginClient.tsx  — login form (client component)
+    view/LoginClient.tsx
   app/(protected)/
-    _components/Navbar.tsx — top header with logout + locale switcher
+    _components/
+      AppLayout.tsx           — server component: shell with Navbar + Sidebar + slot
+      Navbar.tsx              — top header: logo, locale toggle, theme toggle, user menu
+      PageHeader.tsx          — reusable: title + breadcrumbs + action slot
+      Sidebar.tsx             — left nav: links to all modules
+    customers/
+      [id]/edit/page.tsx
+      _components/CustomerForm.tsx
+      new/page.tsx
+      page.tsx
+      actions.ts
+      view/CustomersClient.tsx
     dashboard/
-      page.tsx            — server component, fetches user
-      actions.ts          — getMe, logoutAction
-      view/DashboardClient.tsx — dashboard content (client component)
-  app/_components/Toast.tsx
-  app/api/[...path]/      — API proxy route
-  app/layout.tsx          — root layout (fonts, metadata, theme)
-  app/page.tsx            — redirects to /dashboard
-  lib/auth/               — session, login/logout actions
-  proxy.ts                — route protection + token refresh
+      page.tsx
+      actions.ts
+      view/DashboardClient.tsx
+    layout.tsx                — renders AppLayout (all protected pages share shell)
+  app/_components/
+    ThemeProvider.tsx
+    Toast.tsx
+  app/api/[...path]/          — API proxy route
+  app/layout.tsx              — root layout (fonts, ThemeProvider, metadata)
+  app/page.tsx                — redirects to /dashboard
+  lib/
+    api/
+      client.ts               — browser-side fetch (proxy route)
+      config.ts               — getApiUrl()
+      routes.ts               — NEST_ROUTES constants
+      server-client.ts        — server-side fetch with auth token injection
+    auth/
+      actions.ts              — loginAction, logoutAction
+      session.ts              — cookie helpers
+    i18n/                     — getDictionary, locales, Dictionary type
+    types/index.ts            — shared interfaces (User, Customer, ServiceOrder, Invoice)
+    env.ts                    — Zod env validation
+  proxy.ts                    — route protection + token refresh
 ```
-
-## Visual identity — Lavanderia Visconde
-
-### Brand
-
-**Name**: Lavanderia Visconde
-**Logo**: SVG with hanger icon + "LAVANDERIA" (small, spaced) + "VISCONDE" (large, bold) + underline
-**Favicon**: Square SVG, navy background, white hanger icon
-
-Logo and favicon files to be placed at:
-- `apps/web/public/logo.svg`
-- `apps/web/public/favicon.svg`
-
-Logo SVG content:
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
-  <g transform="translate(8, 8)">
-    <path d="M32 8 C32 4 28 1 24 1 C20 1 17 4 17 8 C17 11 19 13 22 14"
-          stroke="#1E2E6E" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    <path d="M22 14 L4 38 L44 38 Z"
-          stroke="#1E2E6E" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
-    <path d="M2 38 L46 38"
-          stroke="#1E2E6E" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M2 38 L2 41" stroke="#1E2E6E" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M46 38 L46 41" stroke="#1E2E6E" stroke-width="2.5" stroke-linecap="round"/>
-  </g>
-  <g transform="translate(68, 0)">
-    <text x="0" y="30" font-family="Georgia, serif" font-size="13" font-weight="400"
-          letter-spacing="3" fill="#2D45A8">LAVANDERIA</text>
-    <text x="0" y="58" font-family="Georgia, serif" font-size="30" font-weight="700"
-          letter-spacing="1" fill="#1E2E6E">VISCONDE</text>
-    <line x1="0" y1="65" x2="210" y2="65" stroke="#2D45A8" stroke-width="1.5"/>
-  </g>
-</svg>
-```
-
-Favicon SVG content:
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="12" fill="#1E2E6E"/>
-  <g transform="translate(9, 8)">
-    <path d="M23 6 C23 3 20 1 17 1 C14 1 11 3 11 6 C11 9 13 11 16 12"
-          stroke="white" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-    <path d="M16 12 L1 38 L45 38 Z"
-          stroke="white" stroke-width="2.8" stroke-linejoin="round" fill="none"/>
-    <path d="M0 38 L46 38" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M0 38 L0 42" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M46 38 L46 42" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-  </g>
-</svg>
-```
-
-### Color palette
-
-```js
-// tailwind.config.ts
-colors: {
-  primary: {
-    900: '#1E2E6E', // main — texts, titles, icons (light mode)
-    700: '#2D45A8', // buttons, links, accents
-    500: '#4A6BC4', // hover states, borders
-    100: '#E8EDF8', // subtle backgrounds
-  },
-  neutral: {
-    900: '#0F1218', // dark mode background
-    50:  '#F8F9FC', // light mode background
-  },
-  success: '#16A34A',
-  info:    '#0284C7',
-  warning: '#D97706',
-  danger:  '#DC2626',
-}
-```
-
-### Typography
-
-- **Headings / Logo**: `Playfair Display` (Google Fonts, via `next/font`)
-- **UI / Body**: `Inter` (Google Fonts, via `next/font`)
-
-```ts
-import { Inter, Playfair_Display } from 'next/font/google';
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
-```
-
-### Theme
-
-- Support **light**, **dark** and **system** modes
-- Use `class` strategy on `<html>` tag (`dark` class)
-- Implement a `ThemeProvider` client component that:
-  - Reads saved preference from `localStorage` (`theme: 'light' | 'dark' | 'system'`)
-  - Applies `dark` class to `<html>` on mount and on change
-  - Falls back to `prefers-color-scheme` when `system` is selected
-- Add a theme toggle button in `Navbar.tsx` (cycle: light → dark → system)
-
-### CSS variables (globals.css)
-
-```css
-:root {
-  --background: #F8F9FC;
-  --foreground: #1E2E6E;
-  --primary: #1E2E6E;
-  --primary-hover: #2D45A8;
-  --border: #E8EDF8;
-  --muted: #4A6BC4;
-}
-.dark {
-  --background: #0F1218;
-  --foreground: #F8F9FC;
-  --primary: #4A6BC4;
-  --primary-hover: #2D45A8;
-  --border: #1E2E6E;
-  --muted: #2D45A8;
-}
-```
-
-### Component updates
-
-**layout.tsx**: title "Lavanderia Visconde", fonts, ThemeProvider, favicon.svg
-
-**LoginClient.tsx**: logo above card, primary colors on button and focus rings, themed background
-
-**Navbar.tsx**: primary-900 background (light) / neutral-900 (dark), logo on left, theme toggle button
-
-**DashboardClient.tsx**: `bg-[var(--background)]`, `text-[var(--foreground)]`
-
----
 
 ## Prisma schema (current)
 
@@ -234,7 +149,60 @@ model User {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 }
+
+model Customer {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([name])
+  @@index([deletedAt])
+}
 ```
+
+## API endpoints (current)
+
+```
+POST   /auth/login                        — public
+POST   /auth/refresh                      — public
+POST   /auth/logout                       — Bearer
+GET    /auth/me                           — Bearer
+
+POST   /users                             — OPERATOR only
+GET    /users                             — OPERATOR only
+GET    /users/:id                         — OPERATOR or own
+PATCH  /users/:id                         — OPERATOR or own
+DELETE /users/:id                         — OPERATOR only
+
+GET    /customers                         — OPERATOR (?search= ?includeDeleted=)
+GET    /customers/code/:code              — OPERATOR (exact code lookup)
+GET    /customers/code/:code/availability — OPERATOR (real-time availability check)
+GET    /customers/suggest-code?name=      — OPERATOR (suggests 3-char code from name)
+GET    /customers/:id                     — OPERATOR
+POST   /customers                         — OPERATOR
+PATCH  /customers/:id                     — OPERATOR
+DELETE /customers/:id                     — OPERATOR (soft-delete)
+
+GET    /health                            — public
+```
+
+## Design system
+
+**Colors:** CSS variables in `globals.css` — always use `var(--token)`, never hardcoded hex.
+**Fonts:** `--font-inter` (UI), `--font-playfair` (display/headings).
+**Theme:** `class` strategy on `<html>` — ThemeProvider toggles `dark` class. Supports light/dark/system.
+**Key tokens:**
+- `--bg-page`, `--bg-card`, `--border-card`
+- `--text-heading`, `--text-body`, `--text-secondary`, `--text-muted`
+- `--btn-primary-bg`, `--btn-primary-hover`, `--text-on-primary`
+- `--color-success/info/warning/danger` + `-bg`, `-text` variants
+- `--primary`, `--primary-subtle`, `--border-input`, `--border-input-focus`
 
 ## Running locally
 
@@ -242,7 +210,7 @@ model User {
 docker compose up -d
 npm install
 npm run db:migrate
-ADMIN_EMAIL=op@example.com ADMIN_PASSWORD=Op@123 ADMIN_NAME=Operator npm run db:seed
+ADMIN_EMAIL=op@example.com ADMIN_PASSWORD=Operator@123 ADMIN_NAME=Operator npm run db:seed
 npm run dev
 ```
 
@@ -251,7 +219,13 @@ npm run dev
 ```bash
 docker compose up -d
 npm run -w apps/api test:e2e
-# Expected: 37/37 passing
+# Expected: 62/62 passing
+```
+
+Unit tests:
+```bash
+npm run -w apps/api test
+# Expected: 17/17 passing
 ```
 
 ## Deploy
@@ -267,52 +241,47 @@ Push to `main` triggers GitHub Actions:
 
 ### ✅ Item 1 — Infrastructure and Boilerplate Adaptation
 - Renamed role `ADMIN` → `OPERATOR`
+- Fixed seed.ts to read env vars and update password on upsert
 - Updated README
-- Migration applied in production
 
-### 🔲 Item 2 — Visual Identity ← NEXT
-- [ ] Fix `apps/api/tsconfig.json`: add `"prisma/**/*.ts"` to `include`
-- [ ] Fix `apps/api/eslint.config.mjs`: add override for `prisma/**/*.ts`
-- [ ] Add `apps/web/public/logo.svg`
-- [ ] Add `apps/web/public/favicon.svg`
-- [ ] Configure `tailwind.config.ts` with color tokens
-- [ ] Update `apps/web/app/globals.css` with CSS variables for light/dark
-- [ ] Create `apps/web/app/_components/ThemeProvider.tsx`
-- [ ] Update `apps/web/app/layout.tsx`
-- [ ] Update `apps/web/app/(auth)/login/view/LoginClient.tsx`
-- [ ] Update `apps/web/app/(protected)/_components/Navbar.tsx`
-- [ ] Update `apps/web/app/(protected)/dashboard/view/DashboardClient.tsx`
-- [ ] Commit: `feat(web): apply Lavanderia Visconde visual identity`
+### ✅ Item 2 — Visual Identity
+- Lavanderia Visconde design system (CSS variables, Playfair Display + Inter)
+- Logo SVG + favicon
+- Login, Navbar, Dashboard updated
+- ThemeProvider (light/dark/system)
 
-### 🔲 Item 2.5 — Discuss project patterns before next feature (discuss with developer first)
-Before implementing any feature module (Item 3+), discuss and define:
-- API request patterns in the frontend (fetch wrapper, error handling, loading states)
-- Form patterns (controlled components, validation, submission feedback)
-- Component organization conventions (where to put shared components, naming)
-- How to structure new pages (server component + client view pattern already established)
+### ✅ Item 2.5 — Structural Patterns
+- Repository Pattern on all modules
+- serverApi client (server-side, auto-injects token, returns ApiResult<T>)
+- Shared types in lib/types/index.ts
+- Unit tests for services
+- npm audit + Renovate + Dependabot configured
 
-### 🔲 Item 3 — Customer Module
-- Model: name, phone, email?, address?, 3-digit unique code
-- CRUD + search by code + auto-generation of code
-- OPERATOR guard + E2E tests
+### ✅ Item 3 — Customer Module
+- API: CRUD + soft-delete + code availability + suggest-code
+- Web: sidebar layout, customer list, create/edit forms, real-time code validation
 
-### 🔲 Item 4 — Service Order Module (OS)
-- Model: customer, items, weight, price/kg, discount, status, total
-- Status flow: received → washing → ready → delivered
-- Discount per OS (fixed or percentage)
-- E2E tests
+### 🔲 Item 3.1 — Update Bruno collection with Customer endpoints
+
+### 🔲 Item 4 — Service Order Module (OS) ← NEXT
+Sub-items to be defined with the developer before starting.
 
 ### 🔲 Item 5 — Invoice Module (Nota Fiscal)
 - Internal NF linked to OS, PDF download
 - Architecture prepared for external issuer (Phase 2)
-- E2E tests
 
-### 🔲 Item 6 — Open Questions
-- Is price/kg global config or per OS?
+### 🔲 Item 6 — Users Module (Frontend)
+- CRUD completo no frontend (list, create, edit, delete)
+- OPERATOR only
+
+### 🔲 Item 7 — Open Questions (resolve before Items 4–5)
+- Is price/kg a global config or per OS?
 - PDF library preference?
 - Can 3-digit codes be reused when customer becomes inactive?
 
-### 🔲 Item 7 — Update README
+### 🔲 Item 8 — Dashboard with real data
+
+### 🔲 Item 9 — Update README with full project documentation
 
 ---
 
