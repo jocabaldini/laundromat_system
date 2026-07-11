@@ -22,6 +22,18 @@ export interface Customer {
   updatedAt: string;
 }
 
+export type PricingType = 'POR_KG' | 'POR_UNIDADE';
+
+export interface ServiceItem {
+  id: string;
+  name: string;
+  type: PricingType;
+  price: string; // Decimal serialized as string by Prisma
+  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ServiceOrderStatus = 'RECEIVED' | 'WASHING' | 'READY' | 'DELIVERED';
 export type DiscountType = 'PERCENTAGE' | 'FIXED';
 

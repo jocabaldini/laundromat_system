@@ -35,6 +35,14 @@ export const NEST_ROUTES = {
     remove: (id: string) => `/service-orders/${id}`,
   },
 
+  serviceItems: {
+    list: '/service-items',
+    create: '/service-items',
+    findOne: (id: string) => `/service-items/${id}`,
+    update: (id: string) => `/service-items/${id}`,
+    remove: (id: string) => `/service-items/${id}`,
+  },
+
   invoices: {
     list: '/invoices',
     findOne: (id: string) => `/invoices/${id}`,

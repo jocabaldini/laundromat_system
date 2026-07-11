@@ -32,6 +32,8 @@ export type Dictionary = {
     readonly serviceOrders: string;
     readonly invoices: string;
     readonly users: string;
+    readonly settings: string;
+    readonly serviceItems: string;
   };
   readonly customers: {
     readonly title: string;
@@ -58,6 +60,34 @@ export type Dictionary = {
     readonly deleteConfirm: string;
     readonly deleteConfirmDescription: string;
     readonly confirmDelete: string;
+    readonly breadcrumbList: string;
+    readonly breadcrumbNew: string;
+    readonly breadcrumbEdit: string;
+    readonly noResults: string;
+  };
+  readonly settings: {
+    readonly title: string;
+    readonly subtitle: string;
+  };
+  readonly serviceItems: {
+    readonly title: string;
+    readonly newItem: string;
+    readonly editItem: string;
+    readonly count: (n: number) => string;
+    readonly name: string;
+    readonly type: string;
+    readonly price: string;
+    readonly actions: string;
+    readonly edit: string;
+    readonly delete: string;
+    readonly save: string;
+    readonly cancel: string;
+    readonly typePorKg: string;
+    readonly typePorUnidade: string;
+    readonly priceHint: (type: string) => string;
+    readonly invalidPrice: string;
+    readonly deleteConfirm: string;
+    readonly deleteConfirmDescription: string;
     readonly breadcrumbList: string;
     readonly breadcrumbNew: string;
     readonly breadcrumbEdit: string;
