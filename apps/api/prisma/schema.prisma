@@ -25,15 +25,16 @@ model User {
 }
 
 model Customer {
-  id        String    @id @default(cuid())
-  code      String    @unique
-  name      String
-  phone     String?
-  email     String?
-  address   String?
-  deletedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            String         @id @default(cuid())
+  code          String         @unique
+  name          String
+  phone         String?
+  email         String?
+  address       String?
+  deletedAt     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  serviceOrders ServiceOrder[]
 
   @@index([name])
   @@index([deletedAt])
@@ -54,4 +55,60 @@ model ServiceItem {
   updatedAt DateTime    @updatedAt
 
   @@index([deletedAt])
+}
+
+enum ServiceOrderStatus {
+  RECEIVED
+  WASHING
+  IRONING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum ServiceOrderItemStatus {
+  RECEIVED
+  WASHING
+  IRONING
+  READY
+}
+
+model ServiceOrder {
+  id                  String             @id @default(cuid())
+  customerId          String
+  customer            Customer           @relation(fields: [customerId], references: [id])
+  status              ServiceOrderStatus @default(RECEIVED)
+  estimatedDeliveryAt DateTime
+  observations        String?
+  referenceTotal      Decimal            @db.Decimal(10, 2)
+  finalTotal          Decimal            @db.Decimal(10, 2)
+  discount            Decimal            @default(0) @db.Decimal(10, 2)
+  items               ServiceOrderItem[]
+  deletedAt           DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+  @@index([estimatedDeliveryAt])
+  @@index([deletedAt])
+}
+
+model ServiceOrderItem {
+  id              String                 @id @default(cuid())
+  serviceOrderId  String
+  serviceOrder    ServiceOrder           @relation(fields: [serviceOrderId], references: [id])
+  serviceItemId   String
+  serviceItemName String // snapshot — immutable after creation
+  serviceItemType PricingType // snapshot — immutable after creation
+  referencePrice  Decimal                @db.Decimal(10, 2) // snapshot — immutable after creation
+  finalPrice      Decimal                @db.Decimal(10, 2) // editable by operator
+  quantity        Decimal                @db.Decimal(10, 3) // kg (decimal) or units (integer stored as decimal)
+  status          ServiceOrderItemStatus @default(RECEIVED)
+  observations    String?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  @@index([serviceOrderId])
+  @@index([serviceItemId])
 }

@@ -1,0 +1,8 @@
+{
+  "not_found": "Service order not found",
+  "item_not_found": "Service order item not found",
+  "cannot_update_delivered": "Cannot update a delivered service order",
+  "cannot_update_cancelled": "Cannot update a cancelled service order",
+  "invalid_status_transition": "Invalid status transition",
+  "invalid_item_status_transition": "Invalid item status transition"
+}

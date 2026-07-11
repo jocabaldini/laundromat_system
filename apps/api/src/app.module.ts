@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CustomersModule } from './customers/customers.module';
 import { ServiceItemsModule } from './service-items/service-items.module';
+import { ServiceOrdersModule } from './service-orders/service-orders.module';
 import { throttlerConfig } from './throttler.config';
 import { envValidationSchema } from './config/env.validation';
 import { LoggerModule } from './common/logger/logger.module';
@@ -51,6 +52,7 @@ import { RequestContextMiddleware } from './common/request-context/request-conte
     UsersModule,
     CustomersModule,
     ServiceItemsModule,
+    ServiceOrdersModule,
   ],
   controllers: [HealthController],
 })

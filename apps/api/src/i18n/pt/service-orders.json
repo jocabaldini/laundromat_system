@@ -1,0 +1,8 @@
+{
+  "not_found": "Ordem de serviço não encontrada",
+  "item_not_found": "Item da OS não encontrado",
+  "cannot_update_delivered": "Não é possível alterar uma OS entregue",
+  "cannot_update_cancelled": "Não é possível alterar uma OS cancelada",
+  "invalid_status_transition": "Transição de status inválida",
+  "invalid_item_status_transition": "Transição de status do item inválida"
+}
