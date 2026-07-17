@@ -34,14 +34,28 @@ export interface ServiceItem {
   updatedAt: string;
 }
 
-export type ServiceOrderStatus = 'RECEIVED' | 'WASHING' | 'READY' | 'DELIVERED';
-export type DiscountType = 'PERCENTAGE' | 'FIXED';
+export type ServiceOrderStatus =
+  | 'RECEIVED'
+  | 'WASHING'
+  | 'IRONING'
+  | 'READY'
+  | 'DELIVERED'
+  | 'CANCELLED';
+
+export type ServiceOrderItemStatus = 'RECEIVED' | 'WASHING' | 'IRONING' | 'READY';
 
 export interface ServiceOrderItem {
   id: string;
-  garmentType: string;
-  description?: string;
-  observations?: string;
+  serviceItemId: string;
+  serviceItemName: string;
+  serviceItemType: PricingType;
+  referencePrice: string;
+  finalPrice: string;
+  quantity: string;
+  status: ServiceOrderItemStatus;
+  observations: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ServiceOrder {
@@ -49,12 +63,13 @@ export interface ServiceOrder {
   customerId: string;
   customer: Pick<Customer, 'id' | 'code' | 'name'>;
   status: ServiceOrderStatus;
+  estimatedDeliveryAt: string;
+  observations: string | null;
+  referenceTotal: string;
+  finalTotal: string;
+  discount: string;
   items: ServiceOrderItem[];
-  weightKg: number;
-  pricePerKg: number;
-  discountType?: DiscountType;
-  discountValue?: number;
-  totalAmount: number;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -62,7 +77,7 @@ export interface ServiceOrder {
 export interface Invoice {
   id: string;
   serviceOrderId: string;
-  serviceOrder: Pick<ServiceOrder, 'id' | 'weightKg' | 'totalAmount'>;
+  serviceOrder: Pick<ServiceOrder, 'id' | 'finalTotal'>;
   customer: Pick<Customer, 'id' | 'code' | 'name'>;
   issuedAt: string;
 }

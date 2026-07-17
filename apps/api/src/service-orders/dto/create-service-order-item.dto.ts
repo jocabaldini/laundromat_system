@@ -9,6 +9,11 @@ export class CreateServiceOrderItemDto {
   quantity!: number;
 
   @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  finalPrice?: number;
+
+  @IsOptional()
   @IsString()
   observations?: string;
 }

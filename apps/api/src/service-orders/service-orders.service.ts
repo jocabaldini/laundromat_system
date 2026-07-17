@@ -41,12 +41,14 @@ export class ServiceOrdersService {
         }
         const quantity = new Decimal(itemDto.quantity);
         const referencePrice = serviceItem.price;
+        const finalPrice =
+          itemDto.finalPrice !== undefined ? new Decimal(itemDto.finalPrice) : referencePrice;
         return {
           serviceItemId: serviceItem.id,
           serviceItemName: serviceItem.name,
           serviceItemType: serviceItem.type,
           referencePrice,
-          finalPrice: referencePrice, // starts equal to reference
+          finalPrice, // uses the operator-provided price or falls back to reference
           quantity,
           observations: itemDto.observations,
         };

@@ -53,7 +53,7 @@ export default function ServiceItemForm({ item, priceHints, dict }: Props) {
     border: '1px solid var(--border-input)',
     borderRadius: '10px',
     padding: '9px 12px',
-    fontSize: '13px',
+    fontSize: '0.8125rem',
     color: 'var(--text-heading)',
     backgroundColor: 'var(--bg-input)',
     outline: 'none',
@@ -62,7 +62,7 @@ export default function ServiceItemForm({ item, priceHints, dict }: Props) {
 
   const labelStyle = {
     display: 'block',
-    fontSize: '12px',
+    fontSize: '0.75rem',
     fontWeight: 600,
     color: 'var(--text-body)',
     marginBottom: '6px',
@@ -71,7 +71,7 @@ export default function ServiceItemForm({ item, priceHints, dict }: Props) {
   return (
     <form onSubmit={handleSubmit}>
       <div
-        className="max-w-lg rounded-2xl p-6"
+        className="max-w-5xl rounded-2xl p-6"
         style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
       >
         {/* Name */}
@@ -141,7 +141,7 @@ export default function ServiceItemForm({ item, priceHints, dict }: Props) {
               border: '1.5px solid var(--btn-secondary-border)',
               borderRadius: '10px',
               padding: '9px 20px',
-              fontSize: '13px',
+              fontSize: '0.8125rem',
               fontWeight: 600,
               cursor: 'pointer',
             }}
@@ -157,7 +157,7 @@ export default function ServiceItemForm({ item, priceHints, dict }: Props) {
               border: 'none',
               borderRadius: '10px',
               padding: '9px 20px',
-              fontSize: '13px',
+              fontSize: '0.8125rem',
               fontWeight: 600,
               cursor: 'pointer',
             }}

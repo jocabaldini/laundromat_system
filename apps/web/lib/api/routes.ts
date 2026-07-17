@@ -31,7 +31,10 @@ export const NEST_ROUTES = {
     list: '/service-orders',
     create: '/service-orders',
     findOne: (id: string) => `/service-orders/${id}`,
-    updateStatus: (id: string) => `/service-orders/${id}/status`,
+    update: (id: string) => `/service-orders/${id}`,
+    updateItem: (id: string, itemId: string) => `/service-orders/${id}/items/${itemId}`,
+    deliver: (id: string) => `/service-orders/${id}/deliver`,
+    cancel: (id: string) => `/service-orders/${id}/cancel`,
     remove: (id: string) => `/service-orders/${id}`,
   },
 

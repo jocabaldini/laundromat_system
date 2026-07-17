@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import ThemeProvider from './_components/ThemeProvider';
+import { FontSizeProvider } from './_components/FontSizeProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <FontSizeProvider>{children}</FontSizeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

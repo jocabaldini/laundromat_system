@@ -87,4 +87,82 @@ export const ptBR = {
     breadcrumbEdit: 'Editar',
     noResults: 'Nenhum cliente encontrado.',
   },
+  serviceOrders: {
+    title: 'Ordens de Serviço',
+    newOrder: 'Nova OS',
+    editOrder: 'Editar OS',
+    count: (n: number) => `${n} ordem${n !== 1 ? 'ns' : ''} encontrada${n !== 1 ? 's' : ''}`,
+
+    // Fields
+    customer: 'Cliente',
+    estimatedDelivery: 'Entrega prevista',
+    observations: 'Observações',
+    items: 'Itens',
+    status: 'Status',
+    actions: 'Ações',
+    referenceTotal: 'Total de referência',
+    finalTotal: 'Total final',
+    discount: 'Desconto',
+
+    // Item fields
+    item: 'Item',
+    itemType: 'Tipo',
+    quantity: 'Quantidade',
+    unitPrice: 'Preço unit.',
+    subtotal: 'Subtotal',
+    itemStatus: 'Status do item',
+    itemObservations: 'Obs. do item',
+    addItem: 'Adicionar item',
+    removeItem: 'Remover item',
+
+    // Actions
+    save: 'Salvar OS',
+    cancel: 'Cancelar',
+    edit: 'Editar',
+    delete: 'Excluir',
+    deliver: 'Marcar como entregue',
+    cancelOrder: 'Cancelar OS',
+    advanceItemStatus: 'Avançar status',
+
+    // Status labels
+    statusReceived: 'Recebida',
+    statusWashing: 'Em lavagem',
+    statusIroning: 'Passando',
+    statusReady: 'Pronta',
+    statusDelivered: 'Entregue',
+    statusCancelled: 'Cancelada',
+
+    // Item status labels
+    itemStatusReceived: 'Recebido',
+    itemStatusWashing: 'Em lavagem',
+    itemStatusIroning: 'Passando',
+    itemStatusReady: 'Pronto',
+
+    // Filters
+    filterStatus: 'Filtrar por status',
+    filterCustomer: 'Filtrar por cliente',
+    filterDeliveryFrom: 'Entrega de',
+    filterDeliveryTo: 'Entrega até',
+    filterAll: 'Todos',
+    clearFilters: 'Limpar filtros',
+
+    // Misc
+    searchCustomerPlaceholder: 'Buscar cliente...',
+    noResults: 'Nenhuma ordem encontrada.',
+    breadcrumbList: 'Ordens de Serviço',
+    breadcrumbNew: 'Nova OS',
+    breadcrumbEdit: 'Editar',
+    confirmDeliver: 'Confirmar entrega desta OS?',
+    confirmCancel: 'Cancelar esta OS? Esta ação não pode ser desfeita facilmente.',
+    deleteConfirm: 'Excluir esta OS permanentemente?',
+    deleteConfirmDescription: 'O histórico será mantido no banco de dados.',
+    porKg: 'kg',
+    porUnidade: 'un',
+
+    // Form validation (not covered by the prompt but required for the form to work)
+    selectCustomer: 'Selecione um cliente',
+    selectServiceItem: 'Selecione um item',
+    itemsRequired: 'Adicione ao menos um item',
+    invalidQuantity: 'Quantidade inválida',
+  },
 } as const;

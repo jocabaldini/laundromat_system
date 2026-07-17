@@ -84,7 +84,7 @@ export default function CustomerForm({ customer, dict }: Props) {
     border: '1px solid var(--border-input)',
     borderRadius: '10px',
     padding: '9px 12px',
-    fontSize: '13px',
+    fontSize: '0.8125rem',
     color: 'var(--text-heading)',
     backgroundColor: 'var(--bg-input)',
     outline: 'none',
@@ -93,7 +93,7 @@ export default function CustomerForm({ customer, dict }: Props) {
 
   const labelStyle = {
     display: 'block',
-    fontSize: '12px',
+    fontSize: '0.75rem',
     fontWeight: 600,
     color: 'var(--text-body)',
     marginBottom: '6px',
@@ -102,7 +102,7 @@ export default function CustomerForm({ customer, dict }: Props) {
   return (
     <form onSubmit={handleSubmit}>
       <div
-        className="max-w-2xl rounded-2xl p-6"
+        className="max-w-5xl rounded-2xl p-6"
         style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
       >
         {/* Name */}

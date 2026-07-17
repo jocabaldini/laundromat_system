@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { logoutAction } from '@/lib/auth/actions';
 import { setLocaleAction } from '@/lib/i18n/actions';
 import { useTheme } from '@/app/_components/ThemeProvider';
+import { useFontSize } from '@/app/_components/FontSizeProvider';
 import type { Dictionary, Locale } from '@/lib/i18n';
 
 interface NavbarProps {
@@ -16,6 +17,7 @@ interface NavbarProps {
 export default function Navbar({ userName, dict, currentLocale }: NavbarProps) {
   const [isPending, startTransition] = useTransition();
   const { theme, cycleTheme } = useTheme();
+  const { fontSize, increase, decrease } = useFontSize();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +56,7 @@ export default function Navbar({ userName, dict, currentLocale }: NavbarProps) {
     color: '#fff',
     borderRadius: '9999px',
     padding: '5px 12px',
-    fontSize: '13px',
+    fontSize: '0.8125rem',
     fontWeight: 600,
     cursor: 'pointer',
     fontFamily: 'system-ui, sans-serif',
@@ -81,6 +83,39 @@ export default function Navbar({ userName, dict, currentLocale }: NavbarProps) {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          {/* Font size controls */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={decrease}
+              disabled={fontSize <= 80}
+              title="Diminuir fonte"
+              style={{
+                ...pillStyle,
+                padding: '5px 8px',
+                borderRadius: '8px 0 0 8px',
+                borderRight: 'none',
+                opacity: fontSize <= 80 ? 0.4 : 1,
+              }}
+            >
+              A−
+            </button>
+            <button
+              type="button"
+              onClick={increase}
+              disabled={fontSize >= 130}
+              title="Aumentar fonte"
+              style={{
+                ...pillStyle,
+                padding: '5px 8px',
+                borderRadius: '0 8px 8px 0',
+                opacity: fontSize >= 130 ? 0.4 : 1,
+              }}
+            >
+              A+
+            </button>
+          </div>
+
           {/* Locale toggle */}
           <button
             type="button"
