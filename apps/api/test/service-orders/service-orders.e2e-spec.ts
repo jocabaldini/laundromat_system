@@ -26,6 +26,9 @@ describe('Service Orders (e2e)', () => {
 
     // Fixtures required by the FK constraints on ServiceOrder/ServiceOrderItem —
     // created once for the whole suite, not the subject under test here.
+    // Delete in FK-safe order: children before parents
+    await prisma.serviceOrderItem.deleteMany();
+    await prisma.serviceOrder.deleteMany();
     await prisma.customer.deleteMany();
     await prisma.serviceItem.deleteMany();
 

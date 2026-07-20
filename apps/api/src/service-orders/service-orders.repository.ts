@@ -24,7 +24,33 @@ const INCLUDE = {
   },
 } satisfies Prisma.ServiceOrderInclude;
 
-export type ServiceOrderRecord = Prisma.ServiceOrderGetPayload<{ include: typeof INCLUDE }>;
+export interface ServiceOrderRecord {
+  id: string;
+  customerId: string;
+  customer: { id: string; code: string; name: string };
+  status: ServiceOrderStatus;
+  estimatedDeliveryAt: Date;
+  observations: string | null;
+  referenceTotal: Decimal;
+  finalTotal: Decimal;
+  discount: Decimal;
+  deletedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  items: {
+    id: string;
+    serviceItemId: string;
+    serviceItemName: string;
+    serviceItemType: PricingType;
+    referencePrice: Decimal;
+    finalPrice: Decimal;
+    quantity: Decimal;
+    status: ServiceOrderItemStatus;
+    observations: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+}
 
 @Injectable()
 export class ServiceOrdersRepository {
