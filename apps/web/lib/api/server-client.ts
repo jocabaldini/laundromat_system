@@ -5,13 +5,11 @@ import { getSession } from '../auth/session';
 // success: true  → data is available
 // success: false → message explains what went wrong, status is the HTTP code (0 = network error)
 export type ApiResult<T> =
-  | { success: true; data: T }
-  | { success: false; message: string; status: number };
+  { success: true; data: T } | { success: false; message: string; status: number };
 
 // Mutation result for operations that return no body (delete, logout, etc.)
 export type ApiMutationResult =
-  | { success: true }
-  | { success: false; message: string; status: number };
+  { success: true } | { success: false; message: string; status: number };
 
 type ServerFetchOptions = Omit<RequestInit, 'headers'> & {
   headers?: Record<string, string>;

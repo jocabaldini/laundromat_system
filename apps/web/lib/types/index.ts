@@ -35,12 +35,7 @@ export interface ServiceItem {
 }
 
 export type ServiceOrderStatus =
-  | 'RECEIVED'
-  | 'WASHING'
-  | 'IRONING'
-  | 'READY'
-  | 'DELIVERED'
-  | 'CANCELLED';
+  'RECEIVED' | 'WASHING' | 'IRONING' | 'READY' | 'DELIVERED' | 'CANCELLED';
 
 export type ServiceOrderItemStatus = 'RECEIVED' | 'WASHING' | 'IRONING' | 'READY';
 
