@@ -19,6 +19,16 @@
       "matchUpdateTypes": ["major"],
       "automerge": false,
       "labels": ["dependencies", "breaking-change"]
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["eslint"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ],
   "npm": {
