@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /repo
 
 # Required for native addons (e.g. bcrypt) to compile
@@ -39,7 +39,7 @@ RUN npm prune --omit=dev
 # -------------------------
 # runner — final production image
 # -------------------------
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
