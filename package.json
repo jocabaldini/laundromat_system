@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=20 <25"
   },
-  "packageManager": "npm@10.9.8",
+  "packageManager": "npm@12.0.1",
   "scripts": {
     "dev": "concurrently -n api,web -c blue,green \"npm -w apps/api run start:dev\" \"npm -w apps/web run dev\"",
     "dev:api": "npm -w apps/api run start:dev",
