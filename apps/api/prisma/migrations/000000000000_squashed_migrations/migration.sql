@@ -1,8 +1,59 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('OPERATOR', 'USER');
+
+-- CreateEnum
+CREATE TYPE "PricingType" AS ENUM ('POR_KG', 'POR_UNIDADE');
+
 -- CreateEnum
 CREATE TYPE "ServiceOrderStatus" AS ENUM ('RECEIVED', 'WASHING', 'IRONING', 'READY', 'DELIVERED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "ServiceOrderItemStatus" AS ENUM ('RECEIVED', 'WASHING', 'IRONING', 'READY');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "passwordHash" TEXT NOT NULL,
+    "refreshTokenHash" TEXT,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Customer" (
+    "id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "phone" TEXT,
+    "email" TEXT,
+    "address" TEXT,
+    "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ServiceItem" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "type" "PricingType" NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ServiceItem_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "ServiceOrder" (
@@ -40,6 +91,24 @@ CREATE TABLE "ServiceOrderItem" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Customer_code_key" ON "Customer"("code");
+
+-- CreateIndex
+CREATE INDEX "Customer_name_idx" ON "Customer"("name");
+
+-- CreateIndex
+CREATE INDEX "Customer_deletedAt_idx" ON "Customer"("deletedAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ServiceItem_name_key" ON "ServiceItem"("name");
+
+-- CreateIndex
+CREATE INDEX "ServiceItem_deletedAt_idx" ON "ServiceItem"("deletedAt");
+
+-- CreateIndex
 CREATE INDEX "ServiceOrder_customerId_idx" ON "ServiceOrder"("customerId");
 
 -- CreateIndex
@@ -62,3 +131,14 @@ ALTER TABLE "ServiceOrder" ADD CONSTRAINT "ServiceOrder_customerId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "ServiceOrderItem" ADD CONSTRAINT "ServiceOrderItem_serviceOrderId_fkey" FOREIGN KEY ("serviceOrderId") REFERENCES "ServiceOrder"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- RLS isn't representable in schema.prisma, so `migrate diff` doesn't
+-- generate it -- re-added here by hand. Matches what's already live in
+-- production, minus the _prisma_migrations mistake from the migration
+-- this squash replaces.
+ALTER TABLE "User" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Customer" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ServiceItem" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ServiceOrder" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ServiceOrderItem" ENABLE ROW LEVEL SECURITY;
+

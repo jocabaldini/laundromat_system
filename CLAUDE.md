@@ -61,6 +61,7 @@ Built on top of `nest_next_template` boilerplate.
 - **Soft-delete**: all models use `deletedAt DateTime?` — never hard-delete. Queries filter `deletedAt: null` by default, accepting an `includeDeleted` flag to include them.
 - **Repository Pattern**: every module has a `*.repository.ts` that owns all Prisma access. Services contain business logic only and depend on the repository interface.
 - **All configurable values in environment variables**: URLs, parameters, and settings must never be hardcoded.
+- **RLS**: enabled on all public tables — `_prisma_migrations` is deliberately excluded (breaks `migrate dev` shadow DB otherwise)
 
 ## Project structure
 
